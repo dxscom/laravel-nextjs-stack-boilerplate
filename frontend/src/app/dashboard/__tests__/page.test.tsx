@@ -2,7 +2,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 import { screen, waitFor } from "@testing-library/react";
 import { renderWithProviders, mockSsoContext } from "@/test/utils";
 import { setMockSsoData, resetMockSsoData } from "@/test/mocks/omnify-react-sso";
-import DashboardPage from "./page";
+import DashboardPage from "../page";
 
 // Mock the SSO service
 const mockRolesData = {
@@ -62,13 +62,15 @@ const mockBranchesData = {
 };
 
 vi.mock("@/lib/ssoService", () => ({
-  ssoService: {
-    getRoles: vi.fn(() => Promise.resolve(mockRolesData)),
-    getPermissions: vi.fn(() => Promise.resolve(mockPermissionsData)),
-    getPermissionMatrix: vi.fn(() => Promise.resolve(mockMatrixData)),
+  roleService: {
+    list: vi.fn(() => Promise.resolve(mockRolesData)),
+  },
+  permissionService: {
+    list: vi.fn(() => Promise.resolve(mockPermissionsData)),
+    getMatrix: vi.fn(() => Promise.resolve(mockMatrixData)),
   },
   branchService: {
-    getBranches: vi.fn(() => Promise.resolve(mockBranchesData)),
+    list: vi.fn(() => Promise.resolve(mockBranchesData)),
   },
 }));
 

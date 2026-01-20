@@ -1,82 +1,47 @@
 /**
- * SSO Service instance configured for this app
+ * SSO Services - Configured instances for this app
  *
- * Uses createSsoService from @famgia/omnify-react-sso
+ * Service factories from @famgia/omnify-react-sso, configured with app's apiUrl.
+ *
+ * Usage:
+ *   import { roleService, permissionService } from "@/lib/ssoService";
+ *   await roleService.list();
+ *
+ * For types, import from @/omnify/schemas or @famgia/omnify-react-sso directly.
  */
 
-import { createSsoService } from "@famgia/omnify-react-sso";
-
-// Export types for convenience
-// Note: ServiceRole/ServicePermission are API response types (from service)
-// Role/Permission from schemas have additional fields like relations
-export type {
-  ServiceRole as Role,
-  ServicePermission as Permission,
-  RoleWithPermissions,
-  PermissionMatrix,
-  ApiToken,
-  TeamWithPermissions,
-  TeamPermissionDetail,
-  OrphanedTeam,
-  CreateRoleInput,
-  UpdateRoleInput,
-  CreatePermissionInput,
-  UpdatePermissionInput,
-  SyncPermissionsInput,
-  CleanupOrphanedInput,
+import {
+  createAuthService,
+  createTokenService,
+  createRoleService,
+  createPermissionService,
+  createTeamService,
+  createUserRoleService,
+  createBranchService,
+  getScopeLabel,
+  getEffectivePermissions,
 } from "@famgia/omnify-react-sso";
 
-// Branch types
-export interface Branch {
-  id: number;
-  code: string;
-  name: string;
-  is_headquarters: boolean;
-  is_primary: boolean;
-  is_assigned: boolean;
-  access_type: 'explicit' | 'implicit';
-  timezone: string | null;
-  currency: string | null;
-  locale: string | null;
-}
+// =============================================================================
+// Configuration
+// =============================================================================
 
-export interface BranchesResponse {
-  all_branches_access: boolean;
-  branches: Branch[];
-  primary_branch_id: number | null;
-  organization: {
-    id: number;
-    slug: string;
-    name: string;
-  };
-}
-
-// Create and export the service instance
-export const ssoService = createSsoService({
-  apiUrl: process.env.NEXT_PUBLIC_API_URL || "",
-});
-
-// Branch service - extends ssoService
 const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
 
-export const branchService = {
-  /**
-   * Get branches for current user in organization
-   */
-  async getBranches(orgSlug?: string): Promise<BranchesResponse> {
-    const params = orgSlug ? `?organization_slug=${orgSlug}` : '';
-    const response = await fetch(`${apiUrl}/api/sso/branches${params}`, {
-      credentials: 'include',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-    });
+// =============================================================================
+// Service Instances
+// =============================================================================
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch branches: ${response.status}`);
-    }
+export const authService = createAuthService({ apiUrl });
+export const tokenService = createTokenService({ apiUrl });
+export const roleService = createRoleService({ apiUrl });
+export const permissionService = createPermissionService({ apiUrl });
+export const teamService = createTeamService({ apiUrl });
+export const userRoleService = createUserRoleService({ apiUrl });
+export const branchService = createBranchService({ apiUrl });
 
-    return response.json();
-  },
-};
+// =============================================================================
+// Helpers
+// =============================================================================
+
+export { getScopeLabel, getEffectivePermissions };

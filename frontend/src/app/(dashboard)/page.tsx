@@ -28,7 +28,8 @@ import {
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { useSso } from "@famgia/omnify-react-sso";
-import { ssoService, Role, Permission } from "@/lib/ssoService";
+import { roleService, permissionService } from "@/lib/ssoService";
+import type { Role, Permission } from "@/omnify/schemas";
 import { queryKeys } from "@/lib/queryKeys";
 import type { ColumnsType } from "antd/es/table";
 
@@ -45,7 +46,7 @@ export default function DashboardPage() {
     error: rolesError,
   } = useQuery({
     queryKey: queryKeys.sso.roles.list(),
-    queryFn: () => ssoService.getRoles(),
+    queryFn: () => roleService.list(),
   });
 
   // Fetch permissions
@@ -55,13 +56,13 @@ export default function DashboardPage() {
     error: permissionsError,
   } = useQuery({
     queryKey: queryKeys.sso.permissions.list(),
-    queryFn: () => ssoService.getPermissions(),
+    queryFn: () => permissionService.list(),
   });
 
   // Fetch permission matrix
   const { data: matrixData, isLoading: matrixLoading } = useQuery({
     queryKey: queryKeys.sso.permissions.matrix(),
-    queryFn: () => ssoService.getPermissionMatrix(),
+    queryFn: () => permissionService.getMatrix(),
   });
 
   const roles = rolesData?.data ?? [];

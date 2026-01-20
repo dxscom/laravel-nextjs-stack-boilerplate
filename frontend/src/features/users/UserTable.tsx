@@ -4,8 +4,8 @@ import { Table, Space, Button, Popconfirm, Tag } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import type { ColumnsType, TablePaginationConfig, SorterResult } from "antd/es/table";
-import type { FilterValue } from "antd/es/table/interface";
+import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
+import type { FilterValue, SorterResult } from "antd/es/table/interface";
 import type { User, UserListParams } from "@/services/users";
 
 // =============================================================================
@@ -127,12 +127,12 @@ export function UserTable({
       pagination={
         pagination
           ? {
-              current: pagination.current_page,
-              pageSize: pagination.per_page,
-              total: pagination.total,
-              showSizeChanger: true,
-              showTotal: (total) => `${total} ${t("nav.users").toLowerCase()}`,
-            }
+            current: pagination.current_page,
+            pageSize: pagination.per_page,
+            total: pagination.total,
+            showSizeChanger: true,
+            showTotal: (total) => `${total} ${t("nav.users").toLowerCase()}`,
+          }
           : false
       }
     />

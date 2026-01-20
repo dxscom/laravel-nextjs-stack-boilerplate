@@ -20,15 +20,16 @@ export function createTestQueryClient() {
   });
 }
 
-// Mock SSO context data
+// Mock SSO context data (aligned with @famgia/omnify-react-sso types)
 export const mockSsoUser = {
+  id: 1,
+  consoleUserId: 100,
   email: "test@example.com",
   name: "Test User",
-  consoleUserId: "user-123",
 };
 
 export const mockOrganization = {
-  id: "org-1",
+  id: 1,
   name: "Test Organization",
   slug: "test-org",
   orgRole: "owner",

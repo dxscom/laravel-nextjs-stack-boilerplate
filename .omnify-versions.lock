@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "cliVersion": "unknown",
+  "plugins": [
+    {
+      "name": "@famgia/omnify-japan",
+      "version": "0.0.1",
+      "updatedAt": "2026-01-20T15:23:27.972Z"
+    },
+    {
+      "name": "@famgia/omnify-laravel",
+      "version": "0.0.14",
+      "updatedAt": "2026-01-20T15:23:27.972Z"
+    },
+    {
+      "name": "@famgia/omnify-typescript",
+      "version": "0.0.1",
+      "updatedAt": "2026-01-20T15:23:27.972Z"
+    }
+  ],
+  "updatedAt": "2026-01-20T16:19:26.416Z"
+}

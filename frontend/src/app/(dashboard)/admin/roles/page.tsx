@@ -7,9 +7,9 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
 import type { ColumnsType } from "antd/es/table";
-import { roleService } from "@/services/roles";
+import { roleService } from "@/lib/ssoService";
+import type { Role } from "@/omnify/schemas";
 import { queryKeys } from "@/lib/queryKeys";
-import type { Role } from "@famgia/omnify-react-sso";
 
 const { Title } = Typography;
 
@@ -26,16 +26,17 @@ export default function RolesPage() {
   const getIdAsString = (id: string | number): string => String(id);
 
   // Fetch roles
-  const { data: roles, isLoading } = useQuery({
-    queryKey: queryKeys.sso.roles.all,
-    queryFn: roleService.list,
+  const { data: rolesResponse, isLoading } = useQuery({
+    queryKey: queryKeys.sso.roles.list(),
+    queryFn: () => roleService.list(),
   });
+  const roles = rolesResponse?.data;
 
   // Delete mutation
   const deleteMutation = useMutation({
-    mutationFn: roleService.delete,
+    mutationFn: (id: string) => roleService.delete(id, ""),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.sso.roles.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.sso.roles.list() });
       message.success(t("messages.deleted"));
       setDeleteId(null);
     },

@@ -41,6 +41,16 @@ const config: OmnifyConfig = {
     laravelPlugin({ base: "./backend/" }),
     typescriptPlugin({
       modelsPath: "./frontend/src/omnify/schemas",
+      // Exclude SSO schemas - already bundled in @famgia/omnify-react-sso package
+      exclude: [
+        "Branch",
+        "Permission",
+        "Role",
+        "RolePermission",
+        "Team",
+        "TeamPermission",
+        "User",
+      ],
     }),
   ],
   locale: {

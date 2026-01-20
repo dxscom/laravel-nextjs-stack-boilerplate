@@ -1,31 +1,46 @@
 import { vi } from "vitest";
 
-// Mock SSO user type
+// Mock SSO user type (aligned with @famgia/omnify-react-sso)
 export interface SsoUser {
+  id: number;
+  consoleUserId: number;
   email: string;
-  name: string | null;
-  consoleUserId: string;
+  name: string;
 }
 
-// Mock organization type
+// Mock organization type (aligned with @famgia/omnify-react-sso)
 export interface SsoOrganization {
-  id: string;
+  id: number;
   name: string;
   slug: string;
   orgRole: string;
-  serviceRole: string;
+  serviceRole: string | null;
+}
+
+// Mock SSO context value type
+export interface MockSsoContextValue {
+  user: SsoUser | null;
+  organizations: SsoOrganization[];
+  currentOrg: SsoOrganization | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  login: ReturnType<typeof vi.fn>;
+  logout: ReturnType<typeof vi.fn>;
+  globalLogout: ReturnType<typeof vi.fn>;
+  switchOrg: ReturnType<typeof vi.fn>;
 }
 
 // Mock SSO context
-export const mockSsoContext = {
+export const mockSsoContext: MockSsoContextValue = {
   user: {
+    id: 1,
     email: "test@example.com",
     name: "Test User",
-    consoleUserId: "user-123",
+    consoleUserId: 100,
   },
   organizations: [
     {
-      id: "org-1",
+      id: 1,
       name: "Test Organization",
       slug: "test-org",
       orgRole: "owner",
@@ -33,7 +48,7 @@ export const mockSsoContext = {
     },
   ],
   currentOrg: {
-    id: "org-1",
+    id: 1,
     name: "Test Organization",
     slug: "test-org",
     orgRole: "owner",
@@ -48,9 +63,9 @@ export const mockSsoContext = {
 };
 
 // Mutable mock data that tests can modify
-let currentMockData = { ...mockSsoContext };
+let currentMockData: MockSsoContextValue = { ...mockSsoContext };
 
-export const setMockSsoData = (data: Partial<typeof mockSsoContext>) => {
+export const setMockSsoData = (data: Partial<MockSsoContextValue>) => {
   currentMockData = { ...mockSsoContext, ...data };
 };
 

@@ -35,7 +35,8 @@ import { useSso } from '@famgia/omnify-react-sso';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { ssoService, branchService, Role, Permission } from '@/lib/ssoService';
+import { roleService, permissionService, branchService } from '@/lib/ssoService';
+import type { Role, Permission } from '@/omnify/schemas';
 import { queryKeys } from '@/lib/queryKeys';
 import type { ColumnsType } from 'antd/es/table';
 
@@ -56,7 +57,7 @@ export default function DashboardPage() {
         error: rolesError,
     } = useQuery({
         queryKey: queryKeys.sso.roles.list(),
-        queryFn: () => ssoService.getRoles(),
+        queryFn: () => roleService.list(),
         enabled: isAuthenticated,
     });
 
@@ -67,14 +68,14 @@ export default function DashboardPage() {
         error: permissionsError,
     } = useQuery({
         queryKey: queryKeys.sso.permissions.list(),
-        queryFn: () => ssoService.getPermissions(),
+        queryFn: () => permissionService.list(),
         enabled: isAuthenticated,
     });
 
     // Fetch permission matrix
     const { data: matrixData, isLoading: matrixLoading } = useQuery({
         queryKey: queryKeys.sso.permissions.matrix(),
-        queryFn: () => ssoService.getPermissionMatrix(),
+        queryFn: () => permissionService.getMatrix(),
         enabled: isAuthenticated,
     });
 
@@ -85,7 +86,7 @@ export default function DashboardPage() {
         error: branchesError,
     } = useQuery({
         queryKey: queryKeys.sso.branches.list(currentOrg?.slug),
-        queryFn: () => branchService.getBranches(currentOrg?.slug),
+        queryFn: () => branchService.list(currentOrg?.slug),
         enabled: isAuthenticated && !!currentOrg?.slug,
     });
 

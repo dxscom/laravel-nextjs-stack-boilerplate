@@ -25,14 +25,18 @@ import {
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
 import type { ColumnsType } from "antd/es/table";
-import { permissionService } from "@/services/permissions";
-import { roleService } from "@/services/roles";
 import { userService, type User } from "@/services/users";
-import { userRoleService, getScopeLabel } from "@/services/userRoles";
-import { branchService } from "@/lib/ssoService";
+import {
+  roleService,
+  permissionService,
+  userRoleService,
+  branchService,
+  getScopeLabel,
+} from "@/lib/ssoService";
+import type { Permission, Branch } from "@/omnify/schemas";
+import type { RoleAssignment } from "@famgia/omnify-react-sso";
 import { queryKeys } from "@/lib/queryKeys";
-import type { Permission } from "@famgia/omnify-react-sso";
-import { useSso } from "@famgia/omnify-react-sso";
+import { useSso, type ServiceRole as Role } from "@famgia/omnify-react-sso";
 
 const { Title, Text } = Typography;
 
@@ -48,21 +52,23 @@ export default function BranchPermissionsPage() {
   // Fetch branches for current organization
   const { data: branchesData, isLoading: branchesLoading } = useQuery({
     queryKey: queryKeys.sso.branches.list(currentOrg?.slug),
-    queryFn: () => branchService.getBranches(currentOrg?.slug),
+    queryFn: () => branchService.list(currentOrg?.slug),
     enabled: !!currentOrg?.slug,
   });
 
   // Fetch all roles
-  const { data: roles, isLoading: rolesLoading } = useQuery({
-    queryKey: queryKeys.sso.roles.all,
-    queryFn: roleService.list,
+  const { data: rolesResponse, isLoading: rolesLoading } = useQuery({
+    queryKey: queryKeys.sso.roles.list(),
+    queryFn: () => roleService.list(),
   });
+  const roles = rolesResponse?.data;
 
   // Fetch all permissions
-  const { data: permissions } = useQuery({
-    queryKey: queryKeys.sso.permissions.all,
-    queryFn: permissionService.list,
+  const { data: permissionsResponse } = useQuery({
+    queryKey: queryKeys.sso.permissions.list(),
+    queryFn: () => permissionService.list(),
   });
+  const permissions = permissionsResponse?.data;
 
   // Fetch users
   const { data: usersData, isLoading: usersLoading } = useQuery({
@@ -72,7 +78,7 @@ export default function BranchPermissionsPage() {
 
   // Selected branch info
   const selectedBranch = useMemo(
-    () => branchesData?.branches?.find((b) => b.id === selectedBranchId),
+    () => branchesData?.branches?.find((b: Branch) => b.id === selectedBranchId),
     [branchesData, selectedBranchId]
   );
 
@@ -92,7 +98,7 @@ export default function BranchPermissionsPage() {
     const orgId = String(branchesData.organization.id);
     const branchId = selectedBranch.id ? String(selectedBranch.id) : null;
 
-    return userRoleAssignments.filter((a) => {
+    return userRoleAssignments.filter((a: RoleAssignment) => {
       // Global applies everywhere
       if (a.console_org_id === null) return true;
       // Must be same org
@@ -115,7 +121,7 @@ export default function BranchPermissionsPage() {
         console_branch_id: selectedBranchId ? String(selectedBranchId) : null,
       }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: queryKeys.sso.userRoles.all });
+      queryClient.invalidateQueries({ queryKey: queryKeys.sso.userRoles.all() });
       message.success(t("messages.saved"));
     },
     onError: () => {
@@ -128,14 +134,14 @@ export default function BranchPermissionsPage() {
     if (!selectedBranch || !roles) return;
 
     const currentRoleIds = branchRoleAssignments
-      .filter((a) => a.console_branch_id === String(selectedBranchId))
-      .map((a) => a.role.id);
+      .filter((a: RoleAssignment) => a.console_branch_id === String(selectedBranchId))
+      .map((a: RoleAssignment) => a.role.id);
 
     let newRoleIds: string[];
     if (checked) {
       newRoleIds = [...currentRoleIds, roleId];
     } else {
-      newRoleIds = currentRoleIds.filter((id) => id !== roleId);
+      newRoleIds = currentRoleIds.filter((id: string) => id !== roleId);
     }
 
     syncRolesMutation.mutate({ userId, roleIds: newRoleIds });
@@ -161,9 +167,11 @@ export default function BranchPermissionsPage() {
 
     const perms = new Set<string>();
     for (const assignment of branchRoleAssignments) {
-      const role = roles.find((r) => r.id === assignment.role.id);
-      if (role?.permissions) {
-        for (const perm of role.permissions as Array<{ slug?: string } | string>) {
+      const role = roles.find((r: Role) => String(r.id) === assignment.role.id);
+      // Role type doesn't have permissions, need to fetch separately or cast
+      const roleWithPerms = role as Role & { permissions?: Array<{ slug?: string } | string> };
+      if (roleWithPerms?.permissions) {
+        for (const perm of roleWithPerms.permissions) {
           if (typeof perm === "string") {
             perms.add(perm);
           } else if (perm.slug) {
@@ -246,7 +254,7 @@ export default function BranchPermissionsPage() {
               setSelectedUserId(null);
             }}
             loading={branchesLoading}
-            options={branchesData?.branches?.map((branch) => ({
+            options={branchesData?.branches?.map((branch: Branch) => ({
               value: branch.id,
               label: (
                 <Space>
@@ -342,9 +350,9 @@ export default function BranchPermissionsPage() {
                 <div style={{ marginBottom: 16 }}>
                   <Text strong>{t("admin.permissions.assignedRoles")}:</Text>
                   <div style={{ marginTop: 8 }}>
-                    {roles?.map((role) => {
+                    {roles?.map((role: Role) => {
                       const assignment = branchRoleAssignments.find(
-                        (a) => a.role.id === role.id
+                        (a: RoleAssignment) => a.role.id === String(role.id)
                       );
                       const isAssigned = !!assignment;
                       const scope = assignment?.scope;
@@ -354,7 +362,7 @@ export default function BranchPermissionsPage() {
                           <Checkbox
                             checked={isAssigned}
                             onChange={(e) =>
-                              handleRoleToggle(selectedUserId, role.id, e.target.checked)
+                              handleRoleToggle(selectedUserId, String(role.id), e.target.checked)
                             }
                             disabled={syncRolesMutation.isPending}
                           >

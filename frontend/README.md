@@ -1,36 +1,101 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend (Next.js + Ant Design)
+
+Next.js application with Ant Design UI, TanStack Query, and Omnify schema integration.
 
 ## Getting Started
 
-First, run the development server:
-
 ```bash
+# Install dependencies
+npm install
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Framework**: Next.js 15 (App Router)
+- **UI**: Ant Design 6
+- **State**: TanStack Query (React Query)
+- **Auth**: SSO via `@famgia/omnify-react-sso`
+- **Validation**: Zod
+- **i18n**: next-intl
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+├── app/                    # Next.js App Router pages
+├── lib/                    # Utilities & service wrappers
+│   ├── ssoService.ts       # SSO service instances
+│   └── queryKeys.ts        # React Query keys
+├── services/               # App-specific API services
+├── omnify/schemas/         # Generated schemas (app-specific only)
+├── features/               # Feature components
+└── test/                   # Test utilities & mocks
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Schema Usage
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### SSO Schemas (Branch, Role, Permission, etc.)
 
-## Deploy on Vercel
+Import from the `@famgia/omnify-react-sso` package:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```typescript
+// Services
+import { roleService, branchService } from "@/lib/ssoService";
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+// Zod schemas + i18n
+import { 
+  roleCreateSchema, 
+  getRoleFieldLabel 
+} from "@famgia/omnify-react-sso/schemas";
+```
+
+### App-specific Schemas (User, etc.)
+
+Import from local omnify folder:
+
+```typescript
+import { 
+  userCreateSchema, 
+  getUserFieldLabel 
+} from "@/omnify/schemas";
+```
+
+> **Note**: SSO schemas are NOT in `@/omnify/schemas`. They come from the package.
+> See [docs/omnify-schemas.md](../docs/omnify-schemas.md) for details.
+
+## Scripts
+
+```bash
+npm run dev       # Development server
+npm run build     # Production build
+npm run test      # Run tests
+npm run lint      # ESLint
+```
+
+## Generate Schemas
+
+From project root:
+
+```bash
+pnpm generate     # Generates schemas + auto-cleanup
+```
+
+This will:
+1. Generate all backend migrations/models
+2. Generate frontend TypeScript types
+3. Auto-remove SSO schemas (they come from package)
+
+## Environment Variables
+
+Create `.env.local`:
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_SSO_CONSOLE_URL=https://console.example.com
+NEXT_PUBLIC_SSO_SERVICE_SLUG=your-service
+```
