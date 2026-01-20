@@ -4,7 +4,7 @@ import { Button, Card, Space, Typography, Avatar, Divider } from "antd";
 import { GithubOutlined, RocketOutlined, LoginOutlined, LogoutOutlined, UserOutlined } from "@ant-design/icons";
 import { useTranslations } from "next-intl";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
-import { useSso } from "@famgia/omnify-client-sso-react";
+import { useSso } from "@famgia/omnify-react-sso";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -80,9 +80,9 @@ export default function Home() {
               type="primary"
               size="large"
               icon={<RocketOutlined />}
-              href="https://api.boilerplate.app"
+              href="https://api.boilerplate.test/api/documentation"
             >
-              API
+              API Docs
             </Button>
             <Button
               size="large"

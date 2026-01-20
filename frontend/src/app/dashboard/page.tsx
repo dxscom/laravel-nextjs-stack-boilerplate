@@ -31,11 +31,11 @@ import {
     HomeOutlined,
     CheckCircleOutlined,
 } from '@ant-design/icons';
-import { useSso } from '@famgia/omnify-client-sso-react';
+import { useSso } from '@famgia/omnify-react-sso';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { ssoService, branchService, Role, Permission, Branch } from '@/lib/ssoService';
+import { ssoService, branchService, Role, Permission } from '@/lib/ssoService';
 import { queryKeys } from '@/lib/queryKeys';
 import type { ColumnsType } from 'antd/es/table';
 
@@ -47,7 +47,7 @@ const { Title, Text } = Typography;
 export default function DashboardPage() {
     const { user, organizations, currentOrg, isLoading, isAuthenticated, logout, globalLogout, switchOrg } = useSso();
     const router = useRouter();
-    const [selectedBranchId, setSelectedBranchId] = useState<number | null>(null);
+    const [selectedBranchIdState, setSelectedBranchId] = useState<number | null>(null);
 
     // Fetch roles
     const {
@@ -89,18 +89,16 @@ export default function DashboardPage() {
         enabled: isAuthenticated && !!currentOrg?.slug,
     });
 
-    const roles = rolesData?.data ?? [];
-    const permissions = permissionsData?.data ?? [];
+    const roles = useMemo(() => rolesData?.data ?? [], [rolesData?.data]);
+    const permissions = useMemo(() => permissionsData?.data ?? [], [permissionsData?.data]);
     const branches = branchesData?.branches ?? [];
     const primaryBranchId = branchesData?.primary_branch_id;
     const allBranchesAccess = branchesData?.all_branches_access ?? false;
 
-    // Set initial selected branch to primary
-    useEffect(() => {
-        if (primaryBranchId && !selectedBranchId) {
-            setSelectedBranchId(primaryBranchId);
-        }
-    }, [primaryBranchId, selectedBranchId]);
+    // Use computed selected branch (falls back to primary if not explicitly selected)
+    const selectedBranchId = useMemo(() => {
+        return selectedBranchIdState ?? primaryBranchId ?? null;
+    }, [selectedBranchIdState, primaryBranchId]);
 
     // Group permissions by group
     const permissionsByGroup = permissions.reduce(
@@ -114,6 +112,33 @@ export default function DashboardPage() {
         },
         {} as Record<string, Permission[]>
     );
+
+    // Get current user's role and permissions for selected branch
+    const serviceRole = currentOrg?.serviceRole;
+    const currentUserRole = useMemo(() => {
+        if (!serviceRole || !roles.length) return null;
+        return roles.find((r) => r.slug === serviceRole);
+    }, [serviceRole, roles]);
+
+    const currentUserPermissions = useMemo(() => {
+        if (!currentUserRole || !matrixData?.matrix) return [];
+        // Matrix uses role.slug as key, not role.id
+        const permSlugs = matrixData.matrix[currentUserRole.slug] ?? [];
+        return permissions.filter((p) => permSlugs.includes(p.slug));
+    }, [currentUserRole, matrixData, permissions]);
+
+    // Group current user's permissions by group
+    const currentUserPermissionsByGroup = useMemo(() => {
+        return currentUserPermissions.reduce(
+            (acc, perm) => {
+                const group = perm.group || 'other';
+                if (!acc[group]) acc[group] = [];
+                acc[group].push(perm);
+                return acc;
+            },
+            {} as Record<string, Permission[]>
+        );
+    }, [currentUserPermissions]);
 
     // 未認証の場合はホームにリダイレクト
     useEffect(() => {
@@ -170,7 +195,7 @@ export default function DashboardPage() {
             title: 'Permissions',
             key: 'permissions',
             render: (_, record) => {
-                const permCount = matrixData?.matrix[record.id]?.length ?? 0;
+                const permCount = matrixData?.matrix[record.slug]?.length ?? 0;
                 return <Tag color="blue">{permCount} permissions</Tag>;
             },
         },
@@ -373,7 +398,7 @@ export default function DashboardPage() {
                 {branchesError ? (
                     <Alert
                         type="error"
-                        message="Failed to load branches"
+                        title="Failed to load branches"
                         description="Could not fetch branches for this organization."
                     />
                 ) : branchesLoading ? (
@@ -428,6 +453,66 @@ export default function DashboardPage() {
                 )}
             </Card>
 
+            {/* My Permissions for Selected Branch */}
+            {selectedBranchId && (
+                <Card
+                    title={
+                        <Space>
+                            <SafetyOutlined />
+                            My Permissions
+                            {currentUserRole && (
+                                <Tag color={getRoleLevelColor(currentUserRole.level)}>
+                                    {currentUserRole.name}
+                                </Tag>
+                            )}
+                        </Space>
+                    }
+                    extra={
+                        <Space>
+                            <Text type="secondary">
+                                Branch: {branches.find((b) => b.id === selectedBranchId)?.name}
+                            </Text>
+                            <Badge
+                                count={currentUserPermissions.length}
+                                style={{ backgroundColor: '#52c41a' }}
+                                overflowCount={999}
+                            />
+                        </Space>
+                    }
+                    style={{ marginBottom: 24 }}
+                >
+                    {!currentUserRole ? (
+                        <Alert
+                            type="warning"
+                            title="No role assigned"
+                            description="You don't have a role assigned for this organization."
+                        />
+                    ) : currentUserPermissions.length === 0 ? (
+                        <Alert
+                            type="info"
+                            title="No permissions"
+                            description="Your role doesn't have any permissions configured yet."
+                        />
+                    ) : (
+                        <Row gutter={[16, 16]}>
+                            {Object.entries(currentUserPermissionsByGroup).map(([group, perms]) => (
+                                <Col key={group} xs={24} sm={12} lg={8}>
+                                    <Card size="small" title={<Tag color="purple">{group}</Tag>}>
+                                        <Space wrap>
+                                            {perms.map((perm) => (
+                                                <Tag key={perm.id} color="green">
+                                                    {perm.name}
+                                                </Tag>
+                                            ))}
+                                        </Space>
+                                    </Card>
+                                </Col>
+                            ))}
+                        </Row>
+                    )}
+                </Card>
+            )}
+
             {/* Roles */}
             <Card
                 title={<Space><CrownOutlined />All Roles</Space>}
@@ -436,7 +521,7 @@ export default function DashboardPage() {
                 {rolesError ? (
                     <Alert
                         type="error"
-                        message="Failed to load roles"
+                        title="Failed to load roles"
                         description="You may not have permission to view roles."
                     />
                 ) : (
@@ -456,7 +541,7 @@ export default function DashboardPage() {
                 {permissionsError ? (
                     <Alert
                         type="error"
-                        message="Failed to load permissions"
+                        title="Failed to load permissions"
                         description="You may not have permission to view permissions."
                     />
                 ) : permissionsLoading ? (

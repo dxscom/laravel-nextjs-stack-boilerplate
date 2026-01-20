@@ -14,10 +14,10 @@ import {
   KeyOutlined,
 } from "@ant-design/icons";
 import { useTranslations } from "next-intl";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import LocaleSwitcher from "@/components/LocaleSwitcher";
-import { useSso } from "@famgia/omnify-client-sso-react";
+import { useSso } from "@famgia/omnify-react-sso";
 
 const { Header, Sider, Content } = Layout;
 
@@ -36,7 +36,6 @@ interface DashboardLayoutProps {
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const t = useTranslations();
   const pathname = usePathname();
-  const router = useRouter();
   const [collapsed, setCollapsed] = useState(false);
   const { user, isLoading, isAuthenticated, login, logout } = useSso();
 

@@ -20,7 +20,16 @@ const nextConfig: NextConfig = {
   ],
 
   // Transpile linked packages (required for Turbopack with symlinked packages)
-  transpilePackages: ["@famgia/omnify-react-sso", "@omnify-client", "@omnify-base"],
+  transpilePackages: [
+    "@famgia/omnify-react",
+    "@famgia/omnify-react-sso",
+    "@omnify-base",
+  ],
+
+  // Enable experimental symlink resolution for local packages
+  experimental: {
+    externalDir: true,
+  },
 
   // Environment variables exposed to the browser
   env: {

@@ -4,7 +4,8 @@ import { Table, Space, Button, Popconfirm, Tag } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useTranslations } from "next-intl";
 import Link from "next/link";
-import type { ColumnsType, TablePaginationConfig } from "antd/es/table";
+import type { ColumnsType, TablePaginationConfig, SorterResult } from "antd/es/table";
+import type { FilterValue } from "antd/es/table/interface";
 import type { User, UserListParams } from "@/services/users";
 
 // =============================================================================
@@ -96,19 +97,20 @@ export function UserTable({
 
   const handleTableChange = (
     paginationConfig: TablePaginationConfig,
-    _filters: any,
-    sorter: any
+    _filters: Record<string, FilterValue | null>,
+    sorter: SorterResult<User> | SorterResult<User>[]
   ) => {
     // Handle pagination
     if (paginationConfig.current && paginationConfig.pageSize) {
       onPageChange(paginationConfig.current, paginationConfig.pageSize);
     }
 
-    // Handle sorting
-    if (sorter.field) {
+    // Handle sorting (sorter can be array for multi-column sort)
+    const singleSorter = Array.isArray(sorter) ? sorter[0] : sorter;
+    if (singleSorter?.field) {
       onSortChange({
-        field: sorter.field as string,
-        order: sorter.order === "ascend" ? "asc" : "desc",
+        field: singleSorter.field as string,
+        order: singleSorter.order === "ascend" ? "asc" : "desc",
       });
     } else {
       onSortChange(undefined);

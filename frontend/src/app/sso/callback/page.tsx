@@ -1,6 +1,6 @@
 'use client';
 
-import { SsoCallback } from '@famgia/omnify-client-sso-react';
+import { SsoCallback } from '@famgia/omnify-react-sso';
 import { Spin, Alert, Button, Typography, Space } from 'antd';
 import { ReloadOutlined, HomeOutlined, BugOutlined } from '@ant-design/icons';
 
@@ -24,7 +24,7 @@ function LoadingComponent() {
 
 function parseErrorMessage(error: Error): { title: string; description: string; suggestion: string } {
     const message = error.message || 'Unknown error';
-    
+
     // API 500 error
     if (message.includes('500') || message.includes('Server Error')) {
         return {
@@ -33,7 +33,7 @@ function parseErrorMessage(error: Error): { title: string; description: string; 
             suggestion: 'Please check if the backend server is running and properly configured. Run "php artisan serve" or check Laravel logs.',
         };
     }
-    
+
     // Network/connection error
     if (message.includes('fetch') || message.includes('network') || message.includes('ECONNREFUSED')) {
         return {
@@ -42,7 +42,7 @@ function parseErrorMessage(error: Error): { title: string; description: string; 
             suggestion: 'Make sure the backend server is running at the configured API URL.',
         };
     }
-    
+
     // CORS error
     if (message.includes('CORS') || message.includes('cross-origin')) {
         return {
@@ -51,7 +51,7 @@ function parseErrorMessage(error: Error): { title: string; description: string; 
             suggestion: 'Check the backend CORS configuration in config/cors.php.',
         };
     }
-    
+
     // Invalid code
     if (message.includes('invalid') && message.includes('code')) {
         return {
@@ -60,7 +60,7 @@ function parseErrorMessage(error: Error): { title: string; description: string; 
             suggestion: 'Please try logging in again.',
         };
     }
-    
+
     // Default
     return {
         title: 'Authentication Failed',
@@ -71,7 +71,7 @@ function parseErrorMessage(error: Error): { title: string; description: string; 
 
 function ErrorComponent(error: Error) {
     const { title, description, suggestion } = parseErrorMessage(error);
-    
+
     return (
         <div style={{
             display: 'flex',
@@ -90,9 +90,9 @@ function ErrorComponent(error: Error) {
                 boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
             }}>
                 <Alert
-                    message={title}
+                    title={title}
                     description={
-                        <Space direction="vertical" style={{ width: '100%' }}>
+                        <Space orientation="vertical" style={{ width: '100%' }}>
                             <Text>{description}</Text>
                             <Paragraph type="secondary" style={{ marginBottom: 0, marginTop: '0.5rem' }}>
                                 <BugOutlined /> {suggestion}
@@ -103,31 +103,31 @@ function ErrorComponent(error: Error) {
                     showIcon
                     style={{ marginBottom: '1.5rem' }}
                 />
-                
+
                 <Space style={{ width: '100%', justifyContent: 'center' }}>
-                    <Button 
-                        type="primary" 
+                    <Button
+                        type="primary"
                         icon={<ReloadOutlined />}
                         onClick={() => window.location.href = '/'}
                     >
                         Try Again
                     </Button>
-                    <Button 
+                    <Button
                         icon={<HomeOutlined />}
                         onClick={() => window.location.href = '/'}
                     >
                         Return Home
                     </Button>
                 </Space>
-                
+
                 <details style={{ marginTop: '1.5rem' }}>
                     <summary style={{ cursor: 'pointer', color: '#999', fontSize: '12px' }}>
                         Technical Details
                     </summary>
-                    <pre style={{ 
-                        marginTop: '0.5rem', 
-                        padding: '1rem', 
-                        background: '#f5f5f5', 
+                    <pre style={{
+                        marginTop: '0.5rem',
+                        padding: '1rem',
+                        background: '#f5f5f5',
                         borderRadius: '4px',
                         fontSize: '11px',
                         overflow: 'auto',

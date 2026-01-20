@@ -1,7 +1,7 @@
 /**
  * Auth Service - API client for authentication
  *
- * Note: This boilerplate uses SSO authentication via @famgia/omnify-client-sso-react.
+ * Note: This boilerplate uses SSO authentication via @famgia/omnify-react-sso.
  * This service is for traditional email/password auth fallback.
  */
 

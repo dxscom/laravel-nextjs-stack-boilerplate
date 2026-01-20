@@ -16,7 +16,31 @@
     "reset": "Đặt lại",
     "close": "Đóng",
     "yes": "Có",
-    "no": "Không"
+    "no": "Không",
+    "name": "Tên",
+    "email": "Email",
+    "actions": "Hành động"
+  },
+  "admin": {
+    "permissions": {
+      "title": "Quản lý quyền",
+      "branchTitle": "Quản lý quyền theo chi nhánh",
+      "branchDescription": "Chọn chi nhánh để xem và quản lý quyền của người dùng tại chi nhánh đó",
+      "selectBranch": "Chọn chi nhánh",
+      "selectBranchPlaceholder": "Chọn một chi nhánh...",
+      "selectBranchFirst": "Vui lòng chọn một chi nhánh để bắt đầu",
+      "users": "Danh sách người dùng",
+      "userPermissions": "Quyền của người dùng",
+      "selectUserFirst": "Chọn một người dùng để xem quyền",
+      "assignedRoles": "Vai trò được gán",
+      "effectivePermissions": "Quyền hiệu lực",
+      "scopeInfo": "Quyền được gán theo phạm vi: Toàn hệ thống, Toàn tổ chức, hoặc Chi nhánh",
+      "manage": "Quản lý",
+      "permission": "Quyền",
+      "name": "Tên",
+      "slug": "Slug",
+      "group": "Nhóm"
+    }
   },
   "messages": {
     "created": "Tạo thành công",

@@ -102,7 +102,7 @@ export const roleService = {
   /**
    * Get role's permissions
    */
-  getPermissions: async (id: string): Promise<{ role: Role; permissions: any[] }> => {
+  getPermissions: async (id: string): Promise<{ role: Role; permissions: RolePermission[] }> => {
     const response = await api.get(`/api/admin/sso/roles/${id}/permissions`);
     return response.data;
   },

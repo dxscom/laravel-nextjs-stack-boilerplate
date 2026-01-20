@@ -1,6 +1,6 @@
 ---
 description: "Laravel backend rules for Omnify projects: schema-first migrations, thin controllers, security patterns, and code generation. Apply when working with Laravel controllers, models, migrations, or API endpoints."
-globs: ["app/**/*.php", "/Users/f.satoshi/dev/omnify/laravel-nextjs-stack-boilerplate/backend/vendor/omnifyjp/omnify-client-laravel-sso/src/**/*.php"]
+globs: ["app/**/*.php", "/Users/f.satoshi/Herd/boilerplate/backend/vendor/omnifyjp/omnify-client-laravel-sso/src/**/*.php"]
 alwaysApply: false
 ---
 

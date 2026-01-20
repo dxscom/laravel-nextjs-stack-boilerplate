@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Table, Space, Typography, App, Modal, Tag, Tooltip } from "antd";
+import { Button, Table, Space, Typography, App, Tag, Tooltip } from "antd";
 import { PlusOutlined, EditOutlined, DeleteOutlined, LockOutlined } from "@ant-design/icons";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTranslations } from "next-intl";
@@ -39,8 +39,9 @@ export default function RolesPage() {
       message.success(t("messages.deleted"));
       setDeleteId(null);
     },
-    onError: (error: any) => {
-      if (error.response?.data?.error === "CANNOT_DELETE_SYSTEM_ROLE") {
+    onError: (error: unknown) => {
+      const axiosError = error as { response?: { data?: { error?: string } } };
+      if (axiosError.response?.data?.error === "CANNOT_DELETE_SYSTEM_ROLE") {
         message.error(t("admin.roles.cannotDeleteSystem"));
       } else {
         message.error(t("messages.error"));
@@ -115,7 +116,7 @@ export default function RolesPage() {
       title: t("common.actions"),
       key: "actions",
       width: 150,
-      render: (_: any, record: Role) => (
+      render: (_: unknown, record: Role) => (
         <Space>
           <Link href={`/admin/roles/${getIdAsString(record.id)}/edit`}>
             <Button type="text" icon={<EditOutlined />} size="small" />

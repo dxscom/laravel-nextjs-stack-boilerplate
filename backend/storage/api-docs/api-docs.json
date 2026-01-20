@@ -1,0 +1,634 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Documentation",
+        "description": "Laravel API Documentation",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/health": {
+            "get": {
+                "tags": [
+                    "Health"
+                ],
+                "summary": "Health check endpoint",
+                "operationId": "24b74a809d1f5913ec7794d867bc24f4",
+                "responses": {
+                    "200": {
+                        "description": "API is healthy",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "string",
+                                            "example": "ok"
+                                        },
+                                        "timestamp": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "BranchStoreRequest": {
+                "required": [
+                    "console_branch_id",
+                    "console_org_id",
+                    "code",
+                    "name",
+                    "is_headquarters",
+                    "is_active"
+                ],
+                "properties": {
+                    "console_branch_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "console_org_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "code": {
+                        "type": "string",
+                        "maxLength": 20
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "is_headquarters": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "BranchUpdateRequest": {
+                "properties": {
+                    "console_branch_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "console_org_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "code": {
+                        "type": "string",
+                        "maxLength": 20
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "is_headquarters": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "example": true
+                    }
+                },
+                "type": "object"
+            },
+            "PermissionStoreRequest": {
+                "required": [
+                    "name",
+                    "slug"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "slug": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "group": {
+                        "type": "string",
+                        "maxLength": 50,
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "PermissionUpdateRequest": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "slug": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "group": {
+                        "type": "string",
+                        "maxLength": 50
+                    }
+                },
+                "type": "object"
+            },
+            "RolePermissionStoreRequest": {
+                "required": [
+                    "role_id",
+                    "permission_id"
+                ],
+                "properties": {
+                    "role_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "permission_id": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
+            "RolePermissionUpdateRequest": {
+                "properties": {
+                    "role_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "permission_id": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
+            "RoleStoreRequest": {
+                "required": [
+                    "name",
+                    "slug",
+                    "level"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "slug": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "level": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
+            "RoleUpdateRequest": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "slug": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "level": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
+            "TeamPermissionStoreRequest": {
+                "required": [
+                    "console_org_id",
+                    "console_team_id",
+                    "permission_id"
+                ],
+                "properties": {
+                    "console_org_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "console_team_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "permission_id": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
+            "TeamPermissionUpdateRequest": {
+                "properties": {
+                    "console_org_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "console_team_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "permission_id": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
+            "TeamStoreRequest": {
+                "required": [
+                    "console_team_id",
+                    "console_org_id",
+                    "name"
+                ],
+                "properties": {
+                    "console_team_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "console_org_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100
+                    }
+                },
+                "type": "object"
+            },
+            "TeamUpdateRequest": {
+                "properties": {
+                    "console_team_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "console_org_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100
+                    }
+                },
+                "type": "object"
+            },
+            "UserStoreRequest": {
+                "required": [
+                    "name",
+                    "email",
+                    "password"
+                ],
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255,
+                        "example": "user@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "maxLength": 255,
+                        "example": "password123"
+                    },
+                    "console_user_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    },
+                    "console_access_token": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "console_refresh_token": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "console_token_expires_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01T00:00:00Z",
+                        "nullable": true
+                    },
+                    "role_id": {
+                        "type": "integer",
+                        "example": 1,
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "UserUpdateRequest": {
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "maxLength": 255,
+                        "example": "user@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "maxLength": 255,
+                        "example": "password123"
+                    },
+                    "console_user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "console_access_token": {
+                        "type": "string"
+                    },
+                    "console_refresh_token": {
+                        "type": "string"
+                    },
+                    "console_token_expires_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2024-01-01T00:00:00Z"
+                    },
+                    "role_id": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "type": "object"
+            },
+            "Branch": {
+                "description": "Branch",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "console_branch_id": {
+                        "type": "integer"
+                    },
+                    "console_org_id": {
+                        "type": "integer"
+                    },
+                    "code": {
+                        "type": "string",
+                        "maxLength": 20
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "is_headquarters": {
+                        "type": "boolean"
+                    },
+                    "is_active": {
+                        "type": "boolean"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "Permission": {
+                "description": "Permission",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "slug": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "group": {
+                        "type": "string",
+                        "maxLength": 50,
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "RolePermission": {
+                "description": "Role Permission",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "Role": {
+                "description": "Role",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "slug": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "description": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "level": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            },
+            "TeamPermission": {
+                "description": "Team Permission",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "console_org_id": {
+                        "type": "integer"
+                    },
+                    "console_team_id": {
+                        "type": "integer"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "Team": {
+                "description": "Team",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "console_team_id": {
+                        "type": "integer"
+                    },
+                    "console_org_id": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 100
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "description": "User",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email"
+                    },
+                    "email_verified_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "console_user_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "console_access_token": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "console_refresh_token": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "console_token_expires_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time"
+                    }
+                },
+                "type": "object"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Health",
+            "description": "Health"
+        }
+    ]
+}

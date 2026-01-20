@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e131499f40eebfabdfa32dfd1107a3fa",
+    "content-hash": "3672ae7cfd3f4cc30c0c3582502c4ccb",
     "packages": [
         {
             "name": "brick/math",
@@ -2744,17 +2744,11 @@
         },
         {
             "name": "omnifyjp/omnify-client-laravel-sso",
-            "version": "v2.1.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/omnifyjp/omnify-client-laravel-sso.git",
-                "reference": "5397e24a5b8d2c91379b2dec8bccff78aa59f253"
-            },
+            "version": "dev-main",
             "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/omnifyjp/omnify-client-laravel-sso/zipball/5397e24a5b8d2c91379b2dec8bccff78aa59f253",
-                "reference": "5397e24a5b8d2c91379b2dec8bccff78aa59f253",
-                "shasum": ""
+                "type": "path",
+                "url": "/Users/f.satoshi/dev/omnify/packages/omnify-client-laravel-sso",
+                "reference": "5397e24a5b8d2c91379b2dec8bccff78aa59f253"
             },
             "require": {
                 "composer-plugin-api": "^2.0",
@@ -2774,16 +2768,16 @@
             "extra": {
                 "class": "Omnify\\SsoClient\\Composer\\OmnifyDiscoveryPlugin",
                 "omnify": {
-                    "options": {
-                        "factoriesPath": "database/factories",
-                        "generateModels": true,
-                        "migrationsPath": "database/migrations/omnify",
-                        "modelNamespace": "Omnify\\SsoClient\\Models",
-                        "generateMigrations": true
-                    },
                     "schemas": "database/schemas",
+                    "namespace": "Sso",
                     "priority": 50,
-                    "namespace": "Sso"
+                    "options": {
+                        "generateMigrations": true,
+                        "generateModels": true,
+                        "modelNamespace": "Omnify\\SsoClient\\Models",
+                        "migrationsPath": "database/migrations/omnify",
+                        "factoriesPath": "database/factories"
+                    }
                 },
                 "laravel": {
                     "providers": [
@@ -2792,15 +2786,19 @@
                 }
             },
             "autoload": {
-                "files": [
-                    "src/helpers.php"
-                ],
                 "psr-4": {
                     "Omnify\\SsoClient\\": "src/",
                     "Omnify\\SsoClient\\Database\\Factories\\": "database/factories/"
+                },
+                "files": [
+                    "src/helpers.php"
+                ]
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "Omnify\\SsoClient\\Tests\\": "tests/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2813,21 +2811,20 @@
             "description": "SSO Client Package for Laravel - Provides Role, Permission and RolePermission models with Omnify schema-driven development",
             "homepage": "https://github.com/omnifyjp/omnify-client-laravel-sso",
             "keywords": [
-                "Authentication",
-                "SSO",
+                "authentication",
                 "authorization",
                 "auto-discovery",
                 "composer-plugin",
                 "laravel",
                 "omnify",
                 "permissions",
-                "roles"
+                "roles",
+                "sso"
             ],
-            "support": {
-                "issues": "https://github.com/omnifyjp/omnify-client-laravel-sso/issues",
-                "source": "https://github.com/omnifyjp/omnify-client-laravel-sso/tree/v2.1.0"
-            },
-            "time": "2026-01-20T00:22:43+00:00"
+            "transport-options": {
+                "symlink": true,
+                "relative": false
+            }
         },
         {
             "name": "phpoption/phpoption",
@@ -9017,7 +9014,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "omnifyjp/omnify-client-laravel-sso": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

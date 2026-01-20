@@ -1,11 +1,11 @@
 /**
  * Query Keys - Centralized key management for TanStack Query
  *
- * SSO keys imported from @famgia/omnify-client-sso-react
+ * SSO keys imported from @famgia/omnify-react-sso
  * App-specific keys defined here
  */
 
-import { ssoQueryKeys } from "@famgia/omnify-client-sso-react";
+import { ssoQueryKeys } from "@famgia/omnify-react-sso";
 import type { UserListParams } from "@/services/users";
 
 export const queryKeys = {

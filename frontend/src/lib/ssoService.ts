@@ -1,15 +1,17 @@
 /**
  * SSO Service instance configured for this app
  *
- * Uses createSsoService from @famgia/omnify-client-sso-react
+ * Uses createSsoService from @famgia/omnify-react-sso
  */
 
-import { createSsoService } from "@famgia/omnify-client-sso-react";
+import { createSsoService } from "@famgia/omnify-react-sso";
 
 // Export types for convenience
+// Note: ServiceRole/ServicePermission are API response types (from service)
+// Role/Permission from schemas have additional fields like relations
 export type {
-  Role,
-  Permission,
+  ServiceRole as Role,
+  ServicePermission as Permission,
   RoleWithPermissions,
   PermissionMatrix,
   ApiToken,
@@ -22,7 +24,7 @@ export type {
   UpdatePermissionInput,
   SyncPermissionsInput,
   CleanupOrphanedInput,
-} from "@famgia/omnify-client-sso-react";
+} from "@famgia/omnify-react-sso";
 
 // Branch types
 export interface Branch {
@@ -70,11 +72,11 @@ export const branchService = {
         'Content-Type': 'application/json',
       },
     });
-    
+
     if (!response.ok) {
       throw new Error(`Failed to fetch branches: ${response.status}`);
     }
-    
+
     return response.json();
   },
 };

@@ -27,7 +27,7 @@ import {
 } from "@ant-design/icons";
 import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
-import { useSso } from "@famgia/omnify-client-sso-react";
+import { useSso } from "@famgia/omnify-react-sso";
 import { ssoService, Role, Permission } from "@/lib/ssoService";
 import { queryKeys } from "@/lib/queryKeys";
 import type { ColumnsType } from "antd/es/table";
@@ -117,7 +117,7 @@ export default function DashboardPage() {
       key: "permissions",
       render: (_, record) => {
         const permCount =
-          matrixData?.matrix[record.id]?.length ?? 0;
+          matrixData?.matrix[record.slug]?.length ?? 0;
         return <Tag color="blue">{permCount} permissions</Tag>;
       },
     },
@@ -259,7 +259,7 @@ export default function DashboardPage() {
                       currentOrg?.id === org.id ? "#e6f7ff" : undefined,
                   }}
                 >
-                  <Space direction="vertical" size={0}>
+                  <Space orientation="vertical" size={0}>
                     <Text strong>{org.name}</Text>
                     <Text type="secondary" style={{ fontSize: 12 }}>
                       Org Role: <Tag>{org.orgRole}</Tag>
