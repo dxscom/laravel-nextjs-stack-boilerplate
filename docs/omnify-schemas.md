@@ -9,105 +9,144 @@ This project uses **Omnify** for schema-driven development. Schemas define your 
 
 ## Schema Sources
 
-### 1. SSO Schemas (from Package)
+### SSO Schemas (from Package)
 
-SSO-related schemas (Branch, Role, Permission, Team, etc.) come from the `@famgia/omnify-react-sso` package:
+SSO schemas (User, Role, Permission, Branch, Team) come from `@famgia/omnify-react-sso` package and are **re-exported** through `@/omnify/schemas`:
 
 ```typescript
-// ✅ Correct: Import from package
+// ✅ Correct: Import from unified location
+import type { User, Role, Permission, Branch } from "@/omnify/schemas";
 import { 
-  roleService,
   roleCreateSchema, 
-  getRoleFieldLabel 
-} from "@famgia/omnify-react-sso/schemas";
-
-// ❌ Wrong: Don't import from local omnify folder
-import { roleCreateSchema } from "@/omnify/schemas"; // This doesn't exist!
-```
-
-**Why?**
-- SSO schemas are maintained in `omnify-client-laravel-sso` (Laravel package)
-- The React package `@famgia/omnify-react-sso` generates and bundles them during build
-- Ensures consistency across all projects using SSO
-
-### 2. App-specific Schemas (Local)
-
-Your application's own schemas are generated locally:
-
-```
-.omnify/schemas/              ← Define your schemas here (YAML)
-frontend/src/omnify/schemas/  ← Generated TypeScript (auto)
-```
-
-Example import:
-
-```typescript
-// App-specific schemas
-import { 
-  userCreateSchema, 
-  getUserFieldLabel 
+  getRoleFieldLabel,
+  userCreateSchema,
 } from "@/omnify/schemas";
 ```
 
+### App-specific Schemas (Local)
+
+Your application's own schemas are generated locally in `.omnify/schemas/` (YAML) and output to `frontend/src/omnify/schemas/`.
+
+## Import Pattern Summary
+
+| What                                       | Import From                |
+| ------------------------------------------ | -------------------------- |
+| Types (`User`, `Role`, `Permission`, etc.) | `@/omnify/schemas`         |
+| Zod schemas (`userCreateSchema`, etc.)     | `@/omnify/schemas`         |
+| i18n helpers (`getRoleFieldLabel`, etc.)   | `@/omnify/schemas`         |
+| Services (`roleService`, etc.)             | `@/lib/ssoService`         |
+| Hooks (`useSso`, `useAuth`)                | `@famgia/omnify-react-sso` |
+| Service-specific types (`RoleAssignment`)  | `@famgia/omnify-react-sso` |
+
 ## Build Process
 
-### SSO Package Build (when SSO schemas change)
+### Development Workflow
 
-```bash
-cd /Users/f.satoshi/dev/omnify/packages/omnify-client-react-sso
-pnpm build
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  omnify-client-laravel-sso (Laravel Package)                    │
+│  └── database/schemas/Sso/*.yaml  (Source of truth)             │
+└───────────────────────────┬─────────────────────────────────────┘
+                            │ pnpm build (copies schemas)
+                            ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  @famgia/omnify-react-sso (React Package)                       │
+│  └── dist/  (bundled types, schemas, services, hooks)           │
+└───────────────────────────┬─────────────────────────────────────┘
+                            │ linked via pnpm
+                            ▼
+┌─────────────────────────────────────────────────────────────────┐
+│  Boilerplate / Your App                                         │
+│  └── frontend/src/omnify/schemas/index.ts                       │
+│      (re-exports from package + app-specific schemas)           │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-This:
-1. Fetches latest schemas from `omnify-client-laravel-sso`
-2. Runs `omnify generate --types-only`
-3. Bundles everything into `dist/`
+### When SSO Schemas Change
 
-### Boilerplate Generate (for app-specific schemas)
+```bash
+# 1. Rebuild the React SSO package
+cd /path/to/omnify/packages/omnify-client-react-sso
+pnpm build
+
+# 2. Boilerplate automatically uses new dist (linked)
+```
+
+### When App Schemas Change
 
 ```bash
 # From boilerplate root
 pnpm generate
 ```
 
-This runs `omnify generate` which:
-- Generates backend migrations/models
-- Generates frontend TypeScript **excluding** SSO schemas
-
 ### Package Linking (Development)
-
-The boilerplate links directly to the package source:
 
 ```json
 // frontend/package.json
-"@famgia/omnify-react-sso": "link:/Users/f.satoshi/dev/omnify/packages/omnify-client-react-sso"
+"@famgia/omnify-react-sso": "link:/path/to/omnify/packages/omnify-client-react-sso"
 ```
 
-After rebuilding the package, the boilerplate automatically uses the new dist.
+## Configuration
 
-### Exclude Configuration
+### Exclude SSO Schemas from Local Generation
 
-SSO schemas are excluded via `omnify.config.ts`:
+In `omnify.config.ts`:
 
 ```typescript
 typescriptPlugin({
   modelsPath: "./frontend/src/omnify/schemas",
   exclude: [
     "Branch",
-    "Permission", 
+    "Permission",
     "Role",
     "RolePermission",
     "Team",
     "TeamPermission",
+    "User",
   ],
 })
 ```
 
-This ensures SSO schemas are **not generated** locally - import them from `@famgia/omnify-react-sso` instead.
+## Code Examples
 
-## Adding New Schemas
+### Importing Types and Services
 
-### App-specific Schema
+```typescript
+// Types from unified schemas
+import type { Role, Permission, Branch } from "@/omnify/schemas";
+
+// Services from ssoService (configured with apiUrl)
+import { roleService, permissionService, branchService } from "@/lib/ssoService";
+
+// Hooks from package
+import { useSso } from "@famgia/omnify-react-sso";
+
+// Service-specific types (not in schemas)
+import type { RoleAssignment, PermissionMatrix } from "@famgia/omnify-react-sso";
+```
+
+### Using Zod Schemas
+
+```typescript
+import { roleCreateSchema, userCreateSchema } from "@/omnify/schemas";
+
+// Validate form data
+const result = roleCreateSchema.safeParse(formData);
+if (!result.success) {
+  console.error(result.error);
+}
+```
+
+### Using i18n Helpers
+
+```typescript
+import { getRoleFieldLabel, getUserFieldLabel } from "@/omnify/schemas";
+
+// Get localized field label
+const label = getRoleFieldLabel("name", "ja"); // "名前"
+```
+
+## Adding New App Schemas
 
 1. Create YAML in `.omnify/schemas/`:
 
@@ -116,7 +155,6 @@ This ensures SSO schemas are **not generated** locally - import them from `@famg
 displayName:
   ja: 商品
   en: Product
-  vi: Sản phẩm
 
 properties:
   name:
@@ -125,10 +163,6 @@ properties:
     displayName:
       ja: 商品名
       en: Product Name
-  price:
-    type: Decimal
-    precision: 10
-    scale: 2
 ```
 
 2. Run generate:
@@ -140,63 +174,8 @@ pnpm generate
 3. Use in frontend:
 
 ```typescript
-import { 
-  productCreateSchema,
-  getProductFieldLabel 
-} from "@/omnify/schemas";
-```
-
-## Import Cheatsheet
-
-```typescript
-// =============================================================================
-// SSO (from package)
-// =============================================================================
-
-// Services
-import { 
-  roleService, 
-  permissionService, 
-  branchService 
-} from "@famgia/omnify-react-sso";
-
-// OR from lib wrapper
-import { 
-  roleService, 
-  permissionService 
-} from "@/lib/ssoService";
-
-// Zod schemas + i18n
-import { 
-  roleCreateSchema,
-  getRoleFieldLabel,
-  branchI18n 
-} from "@famgia/omnify-react-sso/schemas";
-
-// Query keys
-import { ssoQueryKeys } from "@famgia/omnify-react-sso";
-
-// =============================================================================
-// App-specific (local)
-// =============================================================================
-
-// Types, Zod, i18n
-import { 
-  userCreateSchema,
-  getUserFieldLabel 
-} from "@/omnify/schemas";
-
-// Common types
-import type { 
-  LocaleMap, 
-  DateTimeString 
-} from "@/omnify/schemas";
-
-// Plugin enums (Japan)
-import { 
-  Prefecture,
-  getPrefectureLabel 
-} from "@/omnify/schemas";
+import type { Product } from "@/omnify/schemas";
+import { productCreateSchema, getProductFieldLabel } from "@/omnify/schemas";
 ```
 
 ## Troubleshooting
@@ -205,34 +184,19 @@ import {
 
 Run `pnpm generate` to create the `@omnify-base` folder in `node_modules/`.
 
-### "Module has no exported member 'roleCreateSchema'"
-
-You're importing from the wrong place. SSO schemas come from the package:
-
-```typescript
-// ❌ Wrong
-import { roleCreateSchema } from "@/omnify/schemas";
-
-// ✅ Correct
-import { roleCreateSchema } from "@famgia/omnify-react-sso/schemas";
-```
-
 ### SSO schemas appearing in local folder
 
 If you see `Branch.ts`, `Role.ts`, etc. in `frontend/src/omnify/schemas/`:
 
-1. Check `omnify.config.ts` has `exclude` option configured
+1. Check `omnify.config.ts` has `exclude` option configured (including `"User"`)
 2. Delete the SSO files manually
 3. Re-run `pnpm generate`
 
-### After changing SSO schemas
+### Type errors after package changes
 
-If you modify schemas in `omnify-client-laravel-sso`:
+Rebuild the SSO package:
 
 ```bash
-# 1. Rebuild the React SSO package
-cd /Users/f.satoshi/dev/omnify/packages/omnify-client-react-sso
+cd /path/to/omnify/packages/omnify-client-react-sso
 pnpm build
-
-# 2. Boilerplate automatically uses new dist (linked)
 ```

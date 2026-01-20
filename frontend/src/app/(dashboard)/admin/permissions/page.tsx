@@ -33,7 +33,7 @@ import {
   branchService,
   getScopeLabel,
 } from "@/lib/ssoService";
-import type { Permission, Branch } from "@/omnify/schemas";
+import type { Permission, Branch } from "@famgia/omnify-react-sso";
 import type { RoleAssignment } from "@famgia/omnify-react-sso";
 import { queryKeys } from "@/lib/queryKeys";
 import { useSso, type ServiceRole as Role } from "@famgia/omnify-react-sso";

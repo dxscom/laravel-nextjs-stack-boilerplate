@@ -7,7 +7,7 @@ import { useFormMutation } from "@famgia/omnify-react";
 import { userService } from "@/services/users";
 import { queryKeys } from "@/lib/queryKeys";
 import { UserForm } from "@/features/users/UserForm";
-import type { UserCreate } from "@/omnify/schemas";
+import type { UserCreate } from "@famgia/omnify-react-sso";
 
 const { Title } = Typography;
 

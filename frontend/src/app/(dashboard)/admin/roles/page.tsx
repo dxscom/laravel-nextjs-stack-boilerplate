@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import type { ColumnsType } from "antd/es/table";
 import { roleService } from "@/lib/ssoService";
-import type { Role } from "@/omnify/schemas";
+import type { Role } from "@famgia/omnify-react-sso";
 import { queryKeys } from "@/lib/queryKeys";
 
 const { Title } = Typography;

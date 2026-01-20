@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "3672ae7cfd3f4cc30c0c3582502c4ccb",
+    "content-hash": "8a2133d7528482b194e5710edbe161b5",
     "packages": [
         {
             "name": "brick/math",
@@ -1134,16 +1134,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v12.47.0",
+            "version": "v12.48.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "ab8114c2e78f32e64eb238fc4b495bea3f8b80ec"
+                "reference": "0f0974a9769378ccd9c9935c09b9927f3a606830"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/ab8114c2e78f32e64eb238fc4b495bea3f8b80ec",
-                "reference": "ab8114c2e78f32e64eb238fc4b495bea3f8b80ec",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/0f0974a9769378ccd9c9935c09b9927f3a606830",
+                "reference": "0f0974a9769378ccd9c9935c09b9927f3a606830",
                 "shasum": ""
             },
             "require": {
@@ -1256,7 +1256,7 @@
                 "league/flysystem-sftp-v3": "^3.25.1",
                 "mockery/mockery": "^1.6.10",
                 "opis/json-schema": "^2.4.1",
-                "orchestra/testbench-core": "^10.8.1",
+                "orchestra/testbench-core": "^10.9.0",
                 "pda/pheanstalk": "^5.0.6|^7.0.0",
                 "php-http/discovery": "^1.15",
                 "phpstan/phpstan": "^2.0",
@@ -1352,7 +1352,7 @@
                 "issues": "https://github.com/laravel/framework/issues",
                 "source": "https://github.com/laravel/framework"
             },
-            "time": "2026-01-13T15:29:06+00:00"
+            "time": "2026-01-20T16:12:36+00:00"
         },
         {
             "name": "laravel/prompts",
@@ -1415,16 +1415,16 @@
         },
         {
             "name": "laravel/sanctum",
-            "version": "v4.2.3",
+            "version": "v4.2.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/sanctum.git",
-                "reference": "47d26f1d310879ff757b971f5a6fc631d18663fd"
+                "reference": "dadd2277ff0f05cdb435c8b6a0bcedcf3b5519a9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/sanctum/zipball/47d26f1d310879ff757b971f5a6fc631d18663fd",
-                "reference": "47d26f1d310879ff757b971f5a6fc631d18663fd",
+                "url": "https://api.github.com/repos/laravel/sanctum/zipball/dadd2277ff0f05cdb435c8b6a0bcedcf3b5519a9",
+                "reference": "dadd2277ff0f05cdb435c8b6a0bcedcf3b5519a9",
                 "shasum": ""
             },
             "require": {
@@ -1474,7 +1474,7 @@
                 "issues": "https://github.com/laravel/sanctum/issues",
                 "source": "https://github.com/laravel/sanctum"
             },
-            "time": "2026-01-11T18:20:25+00:00"
+            "time": "2026-01-15T14:37:16+00:00"
         },
         {
             "name": "laravel/serializable-closure",
@@ -2744,11 +2744,17 @@
         },
         {
             "name": "omnifyjp/omnify-client-laravel-sso",
-            "version": "dev-main",
+            "version": "v2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/omnifyjp/omnify-client-laravel-sso.git",
+                "reference": "a7ccb217235c588da98ea7addbc9f81c1c9a2eb1"
+            },
             "dist": {
-                "type": "path",
-                "url": "/Users/f.satoshi/dev/omnify/packages/omnify-client-laravel-sso",
-                "reference": "5397e24a5b8d2c91379b2dec8bccff78aa59f253"
+                "type": "zip",
+                "url": "https://api.github.com/repos/omnifyjp/omnify-client-laravel-sso/zipball/a7ccb217235c588da98ea7addbc9f81c1c9a2eb1",
+                "reference": "a7ccb217235c588da98ea7addbc9f81c1c9a2eb1",
+                "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^2.0",
@@ -2768,16 +2774,16 @@
             "extra": {
                 "class": "Omnify\\SsoClient\\Composer\\OmnifyDiscoveryPlugin",
                 "omnify": {
-                    "schemas": "database/schemas",
-                    "namespace": "Sso",
-                    "priority": 50,
                     "options": {
-                        "generateMigrations": true,
+                        "factoriesPath": "database/factories",
                         "generateModels": true,
-                        "modelNamespace": "Omnify\\SsoClient\\Models",
                         "migrationsPath": "database/migrations/omnify",
-                        "factoriesPath": "database/factories"
-                    }
+                        "modelNamespace": "Omnify\\SsoClient\\Models",
+                        "generateMigrations": true
+                    },
+                    "schemas": "database/schemas",
+                    "priority": 50,
+                    "namespace": "Sso"
                 },
                 "laravel": {
                     "providers": [
@@ -2786,19 +2792,15 @@
                 }
             },
             "autoload": {
+                "files": [
+                    "src/helpers.php"
+                ],
                 "psr-4": {
                     "Omnify\\SsoClient\\": "src/",
                     "Omnify\\SsoClient\\Database\\Factories\\": "database/factories/"
-                },
-                "files": [
-                    "src/helpers.php"
-                ]
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Omnify\\SsoClient\\Tests\\": "tests/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
@@ -2811,20 +2813,21 @@
             "description": "SSO Client Package for Laravel - Provides Role, Permission and RolePermission models with Omnify schema-driven development",
             "homepage": "https://github.com/omnifyjp/omnify-client-laravel-sso",
             "keywords": [
-                "authentication",
+                "Authentication",
+                "SSO",
                 "authorization",
                 "auto-discovery",
                 "composer-plugin",
                 "laravel",
                 "omnify",
                 "permissions",
-                "roles",
-                "sso"
+                "roles"
             ],
-            "transport-options": {
-                "symlink": true,
-                "relative": false
-            }
+            "support": {
+                "issues": "https://github.com/omnifyjp/omnify-client-laravel-sso/issues",
+                "source": "https://github.com/omnifyjp/omnify-client-laravel-sso/tree/v2.2.0"
+            },
+            "time": "2026-01-20T17:44:06+00:00"
         },
         {
             "name": "phpoption/phpoption",
@@ -9014,9 +9017,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "omnifyjp/omnify-client-laravel-sso": 20
-    },
+    "stability-flags": {},
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {

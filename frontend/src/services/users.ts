@@ -1,21 +1,18 @@
 /**
- * User Service - API client for user management
+ * User Service - API client for local user management
+ *
+ * This manages users in the app's database (not SSO users).
  */
 
 import api from "@/lib/api";
+import type { User, UserCreate, UserUpdate } from "@famgia/omnify-react-sso";
+
+// Re-export User type for convenience
+export type { User };
 
 // =============================================================================
 // Types
 // =============================================================================
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  console_user_id: string | null;
-  created_at: string;
-  updated_at: string;
-}
 
 export interface UserListParams {
   page?: number;
@@ -44,16 +41,6 @@ export interface UserResponse {
   message?: string;
 }
 
-export interface UserCreateInput {
-  name: string;
-  email: string;
-}
-
-export interface UserUpdateInput {
-  name?: string;
-  email?: string;
-}
-
 // =============================================================================
 // Service
 // =============================================================================
@@ -78,7 +65,7 @@ export const userService = {
   /**
    * Create a new user
    */
-  create: async (input: UserCreateInput): Promise<User> => {
+  create: async (input: UserCreate): Promise<User> => {
     const response = await api.post<UserResponse>("/api/users", input);
     return response.data.data;
   },
@@ -86,7 +73,7 @@ export const userService = {
   /**
    * Update a user
    */
-  update: async (id: string, input: UserUpdateInput): Promise<User> => {
+  update: async (id: string, input: UserUpdate): Promise<User> => {
     const response = await api.put<UserResponse>(`/api/users/${id}`, input);
     return response.data.data;
   },

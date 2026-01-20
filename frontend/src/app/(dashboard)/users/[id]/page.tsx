@@ -9,7 +9,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { userService } from "@/services/users";
 import { queryKeys } from "@/lib/queryKeys";
-import { getUserFieldLabel } from "@/omnify/schemas";
+import { getUserFieldLabel } from "@famgia/omnify-react-sso";
 import { formatDateTime } from "@/lib/dayjs";
 
 const { Title } = Typography;

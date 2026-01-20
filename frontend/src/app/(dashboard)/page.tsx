@@ -29,7 +29,7 @@ import { useTranslations } from "next-intl";
 import { useQuery } from "@tanstack/react-query";
 import { useSso } from "@famgia/omnify-react-sso";
 import { roleService, permissionService } from "@/lib/ssoService";
-import type { Role, Permission } from "@/omnify/schemas";
+import type { Role, Permission } from "@famgia/omnify-react-sso";
 import { queryKeys } from "@/lib/queryKeys";
 import type { ColumnsType } from "antd/es/table";
 
