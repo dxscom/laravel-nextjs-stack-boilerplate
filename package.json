@@ -1,0 +1,39 @@
+{
+  "name": "@omnify/laravel-nextjs-stack",
+  "description": "Laravel + Next.js stack with Herd, powered by Omnify schema-driven development",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "setup": "./scripts/setup.sh",
+    "dev": "./scripts/dev.sh",
+    "generate": "omnify generate",
+    "omnify": "omnify"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "@famgia/omnify",
+      "@famgia/omnify-laravel",
+      "@famgia/omnify-react",
+      "@famgia/omnify-typescript",
+      "@parcel/watcher",
+      "@swc/core"
+    ]
+  },
+  "devDependencies": {
+    "@famgia/omnify": "^2.0.3",
+    "@famgia/omnify-atlas": "^2.0.3",
+    "@famgia/omnify-gui": "^2.0.3",
+    "@famgia/omnify-japan": "^2.0.3",
+    "@famgia/omnify-laravel": "^2.0.3",
+    "@famgia/omnify-mcp": "^2.0.3",
+    "@famgia/omnify-react": "^2.0.3",
+    "@famgia/omnify-sql": "^2.0.3",
+    "@famgia/omnify-typescript": "^2.0.3",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.7.0",
+    "yaml": "^2.7.0"
+  },
+  "dependencies": {
+    "zod": "^4.3.5"
+  }
+}

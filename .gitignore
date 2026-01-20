@@ -1,0 +1,15 @@
+# Generated folders (root level only)
+/node_modules/
+/.omnify/
+
+# Generated files (root level)
+/.omnify-packages.json
+/.omnify.lock
+
+# Environment
+.env
+.env.local
+
+# Lock files (use fresh install)
+package-lock.json
+pnpm-lock.yaml
