@@ -369,6 +369,13 @@ BACKEND_EXISTS=false
 if [ -d "backend" ]; then
     BACKEND_EXISTS=true
     echo "✓ backend already exists"
+    # Install composer dependencies if vendor doesn't exist
+    if [ ! -d "backend/vendor" ]; then
+        cd backend
+        composer install --no-interaction
+        cd "$PROJECT_ROOT"
+        echo "✓ composer dependencies installed"
+    fi
 else
     laravel new backend --no-interaction
     cd backend
