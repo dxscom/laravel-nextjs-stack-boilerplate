@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8a2133d7528482b194e5710edbe161b5",
+    "content-hash": "fefbaf63dab07a17a70cec6300333e8d",
     "packages": [
         {
             "name": "brick/math",
@@ -2744,7 +2744,7 @@
         },
         {
             "name": "omnifyjp/omnify-client-laravel-sso",
-            "version": "v2.2.0",
+            "version": "v2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/omnifyjp/omnify-client-laravel-sso.git",
@@ -2825,7 +2825,7 @@
             ],
             "support": {
                 "issues": "https://github.com/omnifyjp/omnify-client-laravel-sso/issues",
-                "source": "https://github.com/omnifyjp/omnify-client-laravel-sso/tree/v2.2.0"
+                "source": "https://github.com/omnifyjp/omnify-client-laravel-sso/tree/v2.3.0"
             },
             "time": "2026-01-20T17:44:06+00:00"
         },
