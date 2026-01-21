@@ -4,19 +4,19 @@
   "plugins": [
     {
       "name": "@famgia/omnify-japan",
-      "version": "0.0.1",
-      "updatedAt": "2026-01-20T15:23:27.972Z"
+      "version": "2.0.15",
+      "updatedAt": "2026-01-21T05:52:10.132Z"
     },
     {
       "name": "@famgia/omnify-laravel",
-      "version": "0.0.14",
-      "updatedAt": "2026-01-20T15:23:27.972Z"
+      "version": "2.0.15",
+      "updatedAt": "2026-01-21T05:52:10.132Z"
     },
     {
       "name": "@famgia/omnify-typescript",
-      "version": "0.0.1",
-      "updatedAt": "2026-01-20T15:23:27.972Z"
+      "version": "2.0.15",
+      "updatedAt": "2026-01-21T05:52:10.132Z"
     }
   ],
-  "updatedAt": "2026-01-21T00:32:35.307Z"
+  "updatedAt": "2026-01-21T05:55:35.255Z"
 }

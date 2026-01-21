@@ -20,15 +20,15 @@
     ]
   },
   "devDependencies": {
-    "@famgia/omnify": "^2.0.12",
-    "@famgia/omnify-atlas": "^2.0.12",
-    "@famgia/omnify-gui": "^2.0.12",
-    "@famgia/omnify-japan": "^2.0.12",
-    "@famgia/omnify-laravel": "^2.0.12",
-    "@famgia/omnify-mcp": "^2.0.12",
+    "@famgia/omnify": "^2.0.15",
+    "@famgia/omnify-atlas": "^2.0.15",
+    "@famgia/omnify-gui": "^2.0.15",
+    "@famgia/omnify-japan": "^2.0.15",
+    "@famgia/omnify-laravel": "^2.0.15",
+    "@famgia/omnify-mcp": "^2.0.13",
     "@famgia/omnify-react": "^2.0.10",
-    "@famgia/omnify-sql": "^2.0.12",
-    "@famgia/omnify-typescript": "^2.0.12",
+    "@famgia/omnify-sql": "^2.0.15",
+    "@famgia/omnify-typescript": "^2.0.15",
     "@types/node": "^22.0.0",
     "typescript": "^5.7.0",
     "yaml": "^2.7.0"
