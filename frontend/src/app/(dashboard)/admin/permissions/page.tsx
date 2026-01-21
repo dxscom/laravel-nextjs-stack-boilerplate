@@ -189,7 +189,7 @@ export default function BranchPermissionsPage() {
       title: t("common.name"),
       dataIndex: "name",
       key: "name",
-      render: (name: string, record) => (
+      render: (name: string, record: User) => (
         <Space>
           <UserOutlined />
           <span>{name}</span>

@@ -5,10 +5,20 @@
  */
 
 import api from "@/lib/api";
-import type { User, UserCreate, UserUpdate } from "@famgia/omnify-react-sso";
+import type {
+  User as SSOUser,
+  UserCreate,
+  UserUpdate,
+} from "@famgia/omnify-react-sso";
 
-// Re-export User type for convenience
-export type { User };
+// Local User type (database users have these fields, extending SSO base type)
+export interface User extends SSOUser {
+  id: string;
+  name: string;
+  email: string;
+  created_at?: string;
+  updated_at?: string;
+}
 
 // =============================================================================
 // Types

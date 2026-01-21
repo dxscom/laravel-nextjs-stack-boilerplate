@@ -1,0 +1,12 @@
+# Backend - deploy riêng
+backend/
+
+# Dev tools & docs
+.cursor/
+.claude/
+.agent/
+docs/
+scripts/
+
+# Root dev dependencies (Omnify tools)
+# Không ignore vì cần pnpm-workspace.yaml và package.json

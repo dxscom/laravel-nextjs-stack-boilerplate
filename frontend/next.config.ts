@@ -1,12 +1,17 @@
 import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
+import { resolve } from "path";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
+// Monorepo root (where pnpm-workspace.yaml and main node_modules are)
+const monorepoRoot = resolve(__dirname, "..");
+
 const nextConfig: NextConfig = {
-  // Set correct root for Turbopack (monorepo setup)
+  // Set correct root for Turbopack (monorepo setup with pnpm workspaces)
+  // Root must be monorepo root where node_modules with 'next' package exists
   turbopack: {
-    root: __dirname,
+    root: monorepoRoot,
   },
 
   // Allow HMR WebSocket connections from proxy domains
