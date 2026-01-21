@@ -192,7 +192,9 @@ if [ ! -d "$PMA_DIR" ]; then
     mv phpMyAdmin-*-all-languages phpmyadmin
     cd "$PROJECT_ROOT"
 fi
-cat > "$PMA_DIR/config.inc.php" << PMAEOF
+# Only create config if not exists (preserve user customizations)
+if [ ! -f "$PMA_DIR/config.inc.php" ]; then
+    cat > "$PMA_DIR/config.inc.php" << PMAEOF
 <?php
 \$cfg['blowfish_secret'] = 'omnify-local-dev-secret-key-32ch';
 \$cfg['Servers'][1]['auth_type'] = 'config';
@@ -204,6 +206,7 @@ cat > "$PMA_DIR/config.inc.php" << PMAEOF
 \$cfg['SaveDir'] = '';
 \$cfg['TempDir'] = '/tmp';
 PMAEOF
+fi
 cd "$PMA_DIR"
 herd link pma.omnify >/dev/null 2>&1 || true
 herd secure pma.omnify >/dev/null 2>&1 || true
@@ -394,8 +397,20 @@ cd backend
 echo ""
 echo "Step 8: Setup environment"
 
+# Create .env from template if not exists
+if [ ! -f ".env" ] && [ -f ".env.example" ]; then
+    # Replace placeholders with actual values
+    sed -e "s/\${BASE_DOMAIN}/$BASE_DOMAIN/g" \
+        -e "s/\${DB_PREFIX}/$DB_PREFIX/g" \
+        .env.example > .env
+    echo "✓ Created .env from template"
+fi
+
 php artisan key:generate --force
-php artisan vendor:publish --tag=sso-client-config --force 2>/dev/null || true
+# Only publish config if not exists (preserve user customizations)
+if [ ! -f "config/sso-client.php" ]; then
+    php artisan vendor:publish --tag=sso-client-config 2>/dev/null || true
+fi
 
 # Create MySQL database
 if $MYSQL_CMD -e "SELECT 1" >/dev/null 2>&1; then
