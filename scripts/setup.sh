@@ -22,8 +22,12 @@ MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD:-}
 # SSO Console URL (default: dev.console.omnify.jp, use auth-omnify.test for local)
 SSO_CONSOLE_URL=${SSO_CONSOLE_URL:-https://dev.console.omnify.jp}
 
-# DB prefix (replace - with _)
-DB_PREFIX=$(echo "$BASE_DOMAIN" | tr '-' '_')
+# DB prefix (sanitize: only allow alphanumeric and underscore)
+DB_PREFIX=$(echo "$BASE_DOMAIN" | tr '-' '_' | sed 's/[^a-zA-Z0-9_]//g')
+if [ -z "$DB_PREFIX" ]; then
+    echo "Error: Invalid BASE_DOMAIN - contains no valid characters"
+    exit 1
+fi
 
 echo "Stack: Laravel + Next.js"
 echo "Domain: $BASE_DOMAIN"
